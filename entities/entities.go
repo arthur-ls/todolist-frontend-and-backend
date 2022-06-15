@@ -1,7 +1,7 @@
 package entities
 
 type TodoItemModel struct {
-	Id          int `gorm:"primary_key"`
-	Description string
-	Status      string
+	Id          int    `gorm:"primary_key"`
+	Description string `json:"description"`
+	Status      string `json:"status"`
 }

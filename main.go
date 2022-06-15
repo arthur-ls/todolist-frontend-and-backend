@@ -2,26 +2,29 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 
 	"github.com/arthur-ls/todo-list-project/database"
+	"github.com/arthur-ls/todo-list-project/entities"
 	"github.com/arthur-ls/todo-list-project/migration"
+	route "github.com/arthur-ls/todo-list-project/routes"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
-func Handler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	io.WriteString(w, "Hello World")
-}
+var todo entities.TodoItemModel
 
 func main() {
 	database.InitDB()
-	migration.Migrate()
+	migration.CreateTable()
 	router := mux.NewRouter()
-	router.HandleFunc("/", Handler)
+	route.Route(router)
+
+	handler := cors.New(cors.Options{
+		AllowedMethods: []string{"GET", "POST", "DELETE", "PATCH", "OPTIONS"},
+	}).Handler(router)
+
 	log.Println(fmt.Sprintf("Starting Server on port 3000"))
-	http.ListenAndServe(":3000", router)
+	http.ListenAndServe(":3000", handler)
 }

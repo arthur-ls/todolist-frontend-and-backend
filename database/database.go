@@ -18,8 +18,6 @@ func InitDB() (*gorm.DB, error) {
 		log.Fatalf("Error loading .env file")
 	}
 
-	//port, _ := strconv.Atoi(os.Getenv("PG_PORT"))
-
 	psqlInfo := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PWD"), os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_PORT"), os.Getenv("MYSQL_DB"))
 
 	db, err := gorm.Open(mysql.Open(psqlInfo), &gorm.Config{})
